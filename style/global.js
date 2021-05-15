@@ -4,26 +4,34 @@ import {StyleSheet} from 'react-native';
 export const globalStyles = StyleSheet.create({
   container: {
     flex: 1,
-    height: 100,
+    backgroundColor: 'white',
+  },
+  subContainer: {
+    flex: 2,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'red',
-  },
-  title: {
-    textAlign: 'center',
-    marginVertical: 8,
-  },
-  fixToText: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
   },
   separator: {
-    marginVertical: 8,
+    marginHorizontal: 50,
+    paddingVertical: 50,
     borderBottomColor: '#737373',
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
-  button: {
-    // paddingTop: 10,
-    marginTop: 10,
+  sectionContainer: {
+    marginTop: 32,
+    paddingHorizontal: 24,
+  },
+  sectionTitle: {
+    fontSize: 24,
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+  sectionDescription: {
+    marginTop: 8,
+    fontSize: 18,
+    fontWeight: '400',
+  },
+  highlight: {
+    fontWeight: '700',
   },
 });
