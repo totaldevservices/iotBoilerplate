@@ -3,7 +3,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 import HomeScreen from '../screens/HomeScreen';
-import SettingsScreen from '../screens/SettingsScreen';
+import SettingsScreenHook from '../screens/SettingsScreenHook';
 
 const Tab = createBottomTabNavigator();
 
@@ -12,7 +12,7 @@ const TabNavigator = () => {
     <NavigationContainer>
       <Tab.Navigator>
         <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Settings" component={SettingsScreen} />
+        <Tab.Screen name="Settings" component={SettingsScreenHook} />
       </Tab.Navigator>
     </NavigationContainer>
   );
