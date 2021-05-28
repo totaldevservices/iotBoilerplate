@@ -9,7 +9,7 @@ import AppReducer from './AppReducer';
  * Initial State
  */
 const initialState = {
-  isConnected: false,
+  isDeviceConnected: false,
 };
 
 /**
@@ -20,19 +20,37 @@ const initialState = {
 export const GlobalContext = createContext(initialState);
 
 /**
- * Create provider
+ *  Provider Component
  * The provided allows other components to have access to the global state and dispatch action throughout the application
  */
 export const GlobalProvider = ({children}) => {
   // useReducer needs access to the state and dispatch will be called whenever we call a dispatch action
   const [state, dispatch] = useReducer(AppReducer, initialState);
 
+  // Actions
+  /** Function (action) that updates that state connected to SBC device */
+  const connectToSBCDeviceAction = () => {
+    dispatch({
+      type: 'CONNECT_TO_SBC_DEVICE',
+      // payload: '', // We don't need a payload for this action
+    });
+  };
+
+  const disconnectToSBCDeviceAction = () => {
+    dispatch({
+      type: 'DISCONNECT_TO_SBC_DEVICE',
+      // payload: '', // We don't need a payload for this action
+    });
+  };
+
   // children will be any component that will be wrapped in App.js
-  // ie: TabNavigator component
+  // ie: TabNavigator component in our case
   return (
     <GlobalContext.Provider
       value={{
-        isConnected: state.isConnected,
+        isDeviceConnected: state.isDeviceConnected,
+        connectToSBCDeviceAction,
+        disconnectToSBCDeviceAction,
       }}>
       {children}
     </GlobalContext.Provider>

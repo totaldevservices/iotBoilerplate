@@ -98,21 +98,4 @@ export const globalStyles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: '#ddd',
   },
-  button: {
-    height: 36,
-    margin: 5,
-    paddingHorizontal: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  buttonText: {
-    color: '#7B1FA2',
-    fontWeight: 'bold',
-    fontSize: 14,
-  },
-  buttonRaised: {
-    backgroundColor: '#7B1FA2',
-    borderRadius: 2,
-    elevation: 2,
-  },
 });
