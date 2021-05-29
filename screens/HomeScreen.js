@@ -1,41 +1,55 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {SafeAreaView, View, Text, Switch} from 'react-native';
 import BluetoothSerial from 'react-native-bluetooth-serial';
 import Toast from '@remobile/react-native-toast';
+
+import {GlobalContext} from '../context/GlobalState';
 
 import {globalStyles} from '../style/global';
 
 import Section from '../components/Section';
 
 const HomeScreen = () => {
-  const [isEnabled, setIsEnabled] = useState(false);
+  const [isSwitchEnabled, setIsSwitchEnabled] = useState(false);
 
+  // Fetching context (state) from out Global State
+  const {isDeviceConnected} = useContext(GlobalContext);
+
+  /** Function that contains LED Switch Toggling functionality */
   const toggleSwitch = message => {
-    // When switch is turned ON, send "on" message to RPI to light LED
-    if (!isEnabled) {
-      // if isEnabled is equal to FALSE
-      // Send "on" message to Light LED
-      BluetoothSerial.write('on')
-        .then(res => {
-          Toast.showShortBottom('LED is ON');
-        })
-        .catch(err => Toast.showShortBottom(err.message));
+    /** If device isn't connected, prompt user to connect to SBC via Bluetooth first */
+    if (isDeviceConnected === false) {
+      // Display toast message
+      Toast.showShortBottom('Please connect to a SBC first.');
+    } else {
+      /** Else if device is connect, do the following: */
 
-      // Update state from FALSE to TRUE (from OFF to ON)
-      setIsEnabled(previousState => !previousState);
-    }
-    // When switch is turned OFF, send "off" message to RPI to turn LED off
-    else {
-      // else if isEnabled is equal to TRUE
-      // Send "off" message to Turn off LED
-      BluetoothSerial.write('off')
-        .then(res => {
-          Toast.showShortBottom('LED is OFF');
-        })
-        .catch(err => Toast.showShortBottom(err.message));
+      // When switch is turned ON, send "on" message to RPI to light LED
+      if (!isSwitchEnabled) {
+        // if isEnabled is equal to FALSE
+        // Send "on" message to Light LED
+        BluetoothSerial.write('on')
+          .then(res => {
+            Toast.showShortBottom('LED is ON');
+          })
+          .catch(err => Toast.showShortBottom(err.message));
 
-      // Update state from TRUE to FALSE (from ON to OFF)
-      setIsEnabled(previousState => !previousState);
+        // Update state from FALSE to TRUE (from OFF to ON)
+        setIsSwitchEnabled(previousState => !previousState);
+      }
+      // When switch is turned OFF, send "off" message to RPI to turn LED off
+      else {
+        // else if isEnabled is equal to TRUE
+        // Send "off" message to Turn off LED
+        BluetoothSerial.write('off')
+          .then(res => {
+            Toast.showShortBottom('LED is OFF');
+          })
+          .catch(err => Toast.showShortBottom(err.message));
+
+        // Update state from TRUE to FALSE (from ON to OFF)
+        setIsSwitchEnabled(previousState => !previousState);
+      }
     }
   };
 
@@ -51,13 +65,28 @@ const HomeScreen = () => {
 
       <View style={globalStyles.subContainer}>
         <Text style={globalStyles.sectionTitle}>Light LED</Text>
+
         <Switch
+          style={{
+            paddingTop: 20,
+            transform: [{scaleX: 1.5}, {scaleY: 1.5}],
+          }}
           trackColor={{false: '#767577', true: '#81b0ff'}}
-          thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
+          thumbColor={isSwitchEnabled ? '#f5dd4b' : '#f4f3f4'}
           ios_backgroundColor="#3e3e3e"
           onValueChange={toggleSwitch}
-          value={isEnabled}
+          value={isSwitchEnabled}
         />
+      </View>
+
+      <View style={globalStyles.separator}></View>
+
+      <View style={globalStyles.subContainer}>
+        {isDeviceConnected ? (
+          <Text style={globalStyles.sectionTitle}>SBC is Connected. </Text>
+        ) : (
+          <Text style={globalStyles.sectionTitle}>SBC is not Connected </Text>
+        )}
       </View>
     </SafeAreaView>
   );

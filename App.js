@@ -2,10 +2,13 @@ import 'react-native-gesture-handler';
 import React, {useEffect} from 'react';
 import {Alert, BackHandler} from 'react-native';
 
+import {GlobalProvider} from './context/GlobalState';
+
 import TabNavigator from './routes/TabNavigator';
 
 const App = () => {
   useEffect(() => {
+    // Function handles Back button on Android devices if present
     const backHandlerAction = () => {
       Alert.alert('Quit', 'Are you sure you want to exit the app?', [
         {
@@ -26,7 +29,11 @@ const App = () => {
     return () => backHandler.remove();
   }, []);
 
-  return <TabNavigator />;
+  return (
+    <GlobalProvider>
+      <TabNavigator />
+    </GlobalProvider>
+  );
 };
 
 export default App;
