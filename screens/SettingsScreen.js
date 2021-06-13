@@ -21,13 +21,15 @@ const SettingsScreen = () => {
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    Promise.all([BluetoothSerial.isEnabled(), BluetoothSerial.list()]).then(
-      values => {
-        const [isEnabled, devices] = values;
-        setIsEnabled(isEnabled);
-        setDevices(devices);
-      },
-    );
+    BluetoothSerial.withDelimiter('\n').then(() => {
+      Promise.all([BluetoothSerial.isEnabled(), BluetoothSerial.list()]).then(
+        values => {
+          const [isEnabled, devices] = values;
+          setIsEnabled(isEnabled);
+          setDevices(devices);
+        },
+      );
+    });
 
     BluetoothSerial.on('error', err => console.log(`Error: ${err.message}`));
     BluetoothSerial.on('connectionLost', () => {
