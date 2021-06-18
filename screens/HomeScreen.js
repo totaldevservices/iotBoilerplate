@@ -11,12 +11,13 @@ import Section from '../components/Section';
 
 const HomeScreen = () => {
   const [isSwitchEnabled, setIsSwitchEnabled] = useState(false);
+  const [msgFromSBC, setMsgFromSBC] = useState('');
 
   // Fetching context (state) from out Global State
   const {isDeviceConnected} = useContext(GlobalContext);
 
   /** Function that contains LED Switch Toggling functionality */
-  const toggleSwitch = message => {
+  const toggleSwitch = () => {
     /** If device isn't connected, prompt user to connect to SBC via Bluetooth first */
     if (isDeviceConnected === false) {
       // Display toast message
@@ -53,6 +54,20 @@ const HomeScreen = () => {
     }
   };
 
+  /** Function that reads data sent from SBC */
+  if (isDeviceConnected) {
+    // setInterval() is will allows a function to run only  within an interval of time
+    // in our case, it's 1000 milliseconds (1 second), hence the 1000 below
+    setInterval(() => {
+      BluetoothSerial.readFromDevice().then(data => {
+        if (data.length !== 0) {
+          console.log(`Data sent from SBC: ${data}`);
+          setMsgFromSBC(data);
+        }
+      });
+    }, 1000);
+  }
+
   return (
     // SafeAreaView render content within the safe area boundaries of a device. Only available to iOS devices
     <SafeAreaView style={globalStyles.container}>
@@ -77,6 +92,14 @@ const HomeScreen = () => {
           onValueChange={toggleSwitch}
           value={isSwitchEnabled}
         />
+      </View>
+
+      <View style={globalStyles.separator}></View>
+
+      <View style={globalStyles.subContainer}>
+        <Text style={globalStyles.sectionTitle}>
+          Received Message From SBC: {msgFromSBC}
+        </Text>
       </View>
 
       <View style={globalStyles.separator}></View>
